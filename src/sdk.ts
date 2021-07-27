@@ -29,11 +29,11 @@ class Sdk {
         this.config = config
     }
 
-    public getAuthorizeUrl():string {
-        const redirectUri = `${window.location.origin}/callback`;
+    public getAuthorizeUrl(baseUrl: string = window.location.origin):string {
+        const redirectUri = `${baseUrl}/callback`;
         const scope = "read";
         const state = this.config.appName;
-        return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${redirectUri}&scope=${scope}&state=${state}`;
+        return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
     public getUserProfileUrl(userName:string, account:accountSession) {
