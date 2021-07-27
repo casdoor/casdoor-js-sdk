@@ -29,14 +29,13 @@ class Sdk {
         this.config = config
     }
 
-    public getAuthorizeUrl(baseUrl: string = window.location.origin):string {
-        const redirectUri = `${baseUrl}/callback`;
+    public getAuthorizeUrl(redirectUri: string = `${window.location.origin}/callback`): string {
         const scope = "read";
         const state = this.config.appName;
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
-    public getUserProfileUrl(userName:string, account:accountSession) {
+    public getUserProfileUrl(userName: string, account: accountSession) {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
