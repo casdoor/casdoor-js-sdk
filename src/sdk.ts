@@ -29,7 +29,11 @@ class Sdk {
         this.config = config
     }
 
-    public getAuthorizeUrl(redirectUri: string = `${window.location.origin}/callback`): string {
+    public getSignupUrl() {
+        return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
+    }
+
+    public getSigninUrl(redirectUri: string = `${window.location.origin}/callback`): string {
         const scope = "read";
         const state = this.config.appName;
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
