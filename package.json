@@ -1,6 +1,6 @@
 {
   "name": "casdoor-js-sdk",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "lib/cjs/index.js",
   "typings": "lib/cjs/index.d.ts",
   "module": "lib/esm/index.js",
