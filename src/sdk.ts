@@ -20,7 +20,7 @@ export interface sdkConfig {
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
-export interface accountSession {
+export interface account {
     organization: string,
     username: string,
     type: string,
@@ -43,17 +43,22 @@ class Sdk {
         this.config = config
     }
 
-    public getSignupUrl(): string {
-        return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
+    public getSignupUrl(enablePassword: boolean = true): string {
+        if (enablePassword) {
+            return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
+        } else {
+            return this.getSigninUrl().replace("/login/oauth/authorize", "/signup/oauth/authorize");
+        }
     }
 
-    public getSigninUrl(redirectUri: string = `${window.location.origin}/callback`): string {
+    public getSigninUrl(): string {
+        const redirectUri = `${window.location.origin}/callback`;
         const scope = "read";
         const state = this.config.appName;
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
-    public getUserProfileUrl(userName: string, account: accountSession): string {
+    public getUserProfileUrl(userName: string, account: account): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
@@ -61,7 +66,7 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/users/${this.config.organizationName}/${userName}${param}`;
     }
 
-    public getMyProfileUrl(account: accountSession): string {
+    public getMyProfileUrl(account: account): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
@@ -69,9 +74,9 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/account${param}`;
     }
 
-    public signin(ServerUrl: string): Promise<Response> {
-        let params = new URLSearchParams(window.location.search);
-        return fetch(`${ServerUrl}/api/signin?code=${params.get("code")}&state=${params.get("state")}`, {
+    public signin(serverUrl: string): Promise<Response> {
+        const params = new URLSearchParams(window.location.search);
+        return fetch(`${serverUrl}/api/signin?code=${params.get("code")}&state=${params.get("state")}`, {
             method: "POST",
             credentials: "include",
         }).then(res => res.json());
