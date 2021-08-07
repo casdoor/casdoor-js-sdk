@@ -29,7 +29,7 @@ class Sdk {
         this.config = config
     }
 
-    public getSignupUrl() {
+    public getSignupUrl(): string {
         return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
     }
 
@@ -39,7 +39,7 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
-    public getUserProfileUrl(userName: string, account: accountSession) {
+    public getUserProfileUrl(userName: string, account: accountSession): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
@@ -47,12 +47,20 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/users/${this.config.organizationName}/${userName}${param}`;
     }
 
-    public getMyProfileUrl(account: accountSession) {
+    public getMyProfileUrl(account: accountSession): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
         }
         return `${this.config.serverUrl.trim()}/account${param}`;
+    }
+
+    public signin(ServerUrl: string): Promise<Response> {
+        let params = new URLSearchParams(window.location.search);
+        return fetch(`${ServerUrl}/api/signin?code=${params.get("code")}&state=${params.get("state")}`, {
+            method: "POST",
+            credentials: "include",
+        }).then(res => res.json());
     }
 }
 
