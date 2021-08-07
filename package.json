@@ -1,6 +1,7 @@
 {
   "name": "casdoor-js-sdk",
   "version": "0.0.1",
+  "description": "Javascript client SDK for Casdoor",
   "main": "lib/cjs/index.js",
   "typings": "lib/cjs/index.d.ts",
   "module": "lib/esm/index.js",
@@ -19,8 +20,26 @@
   "files": [
     "lib"
   ],
+  "keywords": [
+    "auth",
+    "authn",
+    "authentication",
+    "sso",
+    "oauth",
+    "oidc",
+    "casbin",
+    "casdoor"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/casdoor/casdoor-js-sdk.git"
-  }
+  },
+  "author": {
+    "name": "Zxilly",
+    "email": "zxilly@outlook.com"
+  },
+  "bugs": {
+    "url": "https://github.com/casdoor/casdoor-js-sdk/issues"
+  },
+  "homepage": "https://github.com/casdoor/casdoor-js-sdk"
 }
