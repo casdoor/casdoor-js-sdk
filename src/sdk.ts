@@ -74,12 +74,48 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/account${param}`;
     }
 
-    public signin(serverUrl: string): Promise<Response> {
+    public signinCallback(serverUrl: string): Promise<any> {
         const params = new URLSearchParams(window.location.search);
         return fetch(`${serverUrl}/api/signin?code=${params.get("code")}&state=${params.get("state")}`, {
             method: "POST",
             credentials: "include",
-        }).then(res => res.json());
+        }).then(res => res.json().then(res => {
+            if (res.status === "ok" && localStorage.getItem("Casdoor-popup") === "true") {
+                localStorage.removeItem("Casdoor-popup");
+                window.close();
+            } else return res;
+        }));
+    }
+
+    public signin(method: string, callbackFn?: () => void) {
+        if (method === "redirect") {
+            window.location.href = this.getSigninUrl();
+        } else if (method === "popup" && callbackFn !== undefined) {
+            this.popupCasdoorWindow(this.getSigninUrl(), callbackFn);
+        }
+    }
+
+    public signup(method: string, callbackFn?: () => void) {
+        if (method === "redirect") {
+            window.location.href = this.getSignupUrl();
+        } else if (method === "popup" && callbackFn !== undefined) {
+            this.popupCasdoorWindow(this.getSignupUrl(), callbackFn);
+        }
+    }
+
+    public popupCasdoorWindow(url: string, callbackFn: () => void) {
+        let width = 550, height = 620;
+        let top = window.screenY + document.body.clientHeight / 2 - height / 2;
+        let left = window.screenX + document.body.clientWidth / 2 - width / 2;
+
+        let popupWindow = window.open(url, "Casdoor Signin", `width=${width}, height=${height}, left=${left}, top=${top}`);
+        let checkWindowClosed = setInterval(() => {
+            if (popupWindow === null || popupWindow.closed) {
+                clearInterval(checkWindowClosed);
+                callbackFn();
+            }
+        }, 100);
+        localStorage.setItem("Casdoor-popup", "true");
     }
 }
 
