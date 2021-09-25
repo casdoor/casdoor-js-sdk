@@ -13,3 +13,8 @@ jobs:
           node-version: '14.17.0'
       - run: yarn install && CI=false yarn run build
         working-directory: ./
+
+      - name: Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
