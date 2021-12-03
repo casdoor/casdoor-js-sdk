@@ -13,10 +13,11 @@
 // limitations under the License.
 
 export interface sdkConfig {
-    serverUrl: string, // your Casdoor URL, like the official one: https://door.casbin.com
-    clientId: string, // your Casdoor OAuth Client ID
-    appName: string, // your Casdoor application name, like: "app-built-in"
-    organizationName: string // your Casdoor organization name, like: "built-in"
+    serverUrl: string, // your Casdoor server URL, e.g., "https://door.casbin.com" for the official demo site
+    clientId: string, // the Client ID of your Casdoor application, e.g., "014ae4bd048734ca2dea"
+    appName: string, // the name of your Casdoor application, e.g., "app-casnode"
+    organizationName: string // the name of the Casdoor organization connected with your Casdoor application, e.g., "casbin"
+    redirectPath: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
@@ -41,6 +42,9 @@ class Sdk {
 
     constructor(config: sdkConfig) {
         this.config = config
+        if (config.redirectPath === undefined || config.redirectPath === null) {
+            this.config.redirectPath = "/callback";
+        }
     }
 
     public getSignupUrl(enablePassword: boolean = true): string {
@@ -52,7 +56,7 @@ class Sdk {
     }
 
     public getSigninUrl(): string {
-        const redirectUri = `${window.location.origin}/callback`;
+        const redirectUri = `${window.location.origin}${this.config.redirectPath}`;
         const scope = "read";
         const state = this.config.appName;
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
