@@ -3,6 +3,7 @@
     "target": "ES6",
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "declaration": true,
