@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-export interface sdkConfig {
+export interface SdkConfig {
     serverUrl: string, // your Casdoor server URL, e.g., "https://door.casbin.com" for the official demo site
     clientId: string, // the Client ID of your Casdoor application, e.g., "014ae4bd048734ca2dea"
     appName: string, // the name of your Casdoor application, e.g., "app-casnode"
     organizationName: string // the name of the Casdoor organization connected with your Casdoor application, e.g., "casbin"
-    redirectPath: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
+    redirectPath?: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
-export interface account {
+export interface Account {
     organization: string,
     username: string,
     type: string,
@@ -38,9 +38,9 @@ export interface account {
 }
 
 class Sdk {
-    private config: sdkConfig
+    private config: SdkConfig
 
-    constructor(config: sdkConfig) {
+    constructor(config: SdkConfig) {
         this.config = config
         if (config.redirectPath === undefined || config.redirectPath === null) {
             this.config.redirectPath = "/callback";
@@ -62,7 +62,7 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
-    public getUserProfileUrl(userName: string, account: account): string {
+    public getUserProfileUrl(userName: string, account: Account): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
@@ -70,7 +70,7 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/users/${this.config.organizationName}/${userName}${param}`;
     }
 
-    public getMyProfileUrl(account: account): string {
+    public getMyProfileUrl(account: Account): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
