@@ -3,12 +3,12 @@
     "target": "ES6",
     "module": "CommonJS",
     "moduleResolution": "Node",
-    "sourceMap": true,
     "strict": true,
     "strictPropertyInitialization": false,
     "declaration": true,
     "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "rootDirs": ["./src", "./test"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }

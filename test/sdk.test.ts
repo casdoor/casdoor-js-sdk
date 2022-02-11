@@ -1,5 +1,12 @@
-// TODO: add integration tests
+import Sdk from '../src';
 
-test('Hello world', () => {
-    console.log('Hello world')
+test('new sdk', () => {
+    const sdkConfig = {
+        serverUrl: "https://door.casbin.com",
+        clientId: "014ae4bd048734ca2dea",
+        appName: "app-casnode",
+        organizationName: "casbin",
+        redirectPath: "/callback",
+    }
+    const sdk = new Sdk(sdkConfig)
 })
