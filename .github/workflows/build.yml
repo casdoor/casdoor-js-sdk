@@ -11,8 +11,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '14.17.0'
-      - run: yarn install && CI=false yarn run build
-        working-directory: ./
+
+      - run: yarn install
+
+      - run: yarn test
+
+      - run: yarn coverage
 
       - name: Codecov
         uses: codecov/codecov-action@v1
