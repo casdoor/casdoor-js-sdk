@@ -7,6 +7,8 @@
   "module": "lib/esm/index.js",
   "license": "Apache-2.0",
   "scripts": {
+    "prepack": "run-s build",
+    "postpack": "run-s clean",
     "build": "run-s clean && run-p build:*",
     "build:cjs": "tsc -p tsconfig.cjs.json",
     "build:esm": "tsc -p tsconfig.esm.json",
