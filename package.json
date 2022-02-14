@@ -12,7 +12,8 @@
     "build:esm": "tsc -p tsconfig.esm.json",
     "clean": "rimraf lib",
     "test": "jest",
-    "coverage": "jest --coverage"
+    "coverage": "jest --coverage",
+    "semantic-release": "semantic-release"
   },
   "jest": {
     "maxConcurrency": 1,
