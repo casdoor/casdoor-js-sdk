@@ -11,7 +11,7 @@ jobs:
 
       - name: Run semantic-release
         if: github.event_name == 'push' && github.repository == 'casdoor/casdoor-js-sdk'
-        run: npx semantic-release
+        run: yarn install && yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
