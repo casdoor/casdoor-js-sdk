@@ -8,7 +8,6 @@
     "declaration": true,
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    "rootDirs": ["./src", "./test"]
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*"]
 }
