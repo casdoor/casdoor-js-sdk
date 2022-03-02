@@ -46,7 +46,7 @@ Initialization requires 5 parameters, which are all string type:
 | redirectPath     | No  | the path of the redirect URL for your Casdoor application, will be `/callback` if not provided              |
 
 ```typescript
-import {SDK, SdkConfig} from 'casdoor-nodejs-sdk'
+import {SDK, SdkConfig} from 'casdoor-js-sdk'
 
 const sdkConfig: SdkConfig = {
     serverUrl: "https://door.casbin.com",
