@@ -23,7 +23,7 @@ Casdoor SDK is very simple to use. We will show you the steps below.
 
 > Noted that this sdk has been applied to casnode, if you still don’t know how to use it after reading README.md, you can refer to it
 
-## Usage in Node.js Environment
+## Usage in NPM environment
 
 ### Installation
 
@@ -61,9 +61,9 @@ const sdk = new SDK(sdkConfig)
 // call sdk to handle
 ```
 
-## Usage in Vanilla Javascript
+## Usage in vanilla Javascript
 
-### Import and Init SDK
+### Import and init SDK
 
 Initialization parameters are consistent with the previous node.js section:
 
@@ -83,7 +83,7 @@ Initialization parameters are consistent with the previous node.js section:
 </script>
 ```
 
-### Call Functions in SDK
+### Call functions in SDK
 
 ```html
 <script type="text/javascript">
