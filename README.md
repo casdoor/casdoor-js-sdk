@@ -23,7 +23,9 @@ Casdoor SDK is very simple to use. We will show you the steps below.
 
 > Noted that this sdk has been applied to casnode, if you still don’t know how to use it after reading README.md, you can refer to it
 
-## Installation
+## Usage in Node.js Environment
+
+### Installation
 
 ~~~shell script
 # NPM
@@ -33,7 +35,7 @@ npm i casdoor-js-sdk
 yarn add casdoor-js-sdk
 ~~~
 
-## Init SDK
+### Init SDK
 
 Initialization requires 5 parameters, which are all string type:
 
@@ -58,3 +60,36 @@ const sdkConfig: SdkConfig = {
 const sdk = new SDK(sdkConfig)
 // call sdk to handle
 ```
+
+## Usage in Vanilla Javascript
+
+### Import and Init SDK
+
+Initialization parameters are consistent with the previous node.js section:
+
+```html
+<!--init the SDK-->
+<script type="module">
+  //Import from cdn(you can choose the appropriate cdn source according to your needs), or just from the local(download the casdoor-js-sdk first)
+  import SDK from 'https://unpkg.com/casdoor-js-sdk@latest/lib/esm/sdk.js'
+  const sdkConfig = {
+    serverUrl: "https://door.casbin.com",
+    clientId: "014ae4bd048734ca2dea",
+    appName: "app-casnode",
+    organizationName: "casbin",
+    redirectPath: "/callback",
+  }
+  window.sdk = new SDK(sdkConfig)
+</script>
+```
+
+### Call Functions in SDK
+
+```html
+<script type="text/javascript">
+  function gotoSignUpPage() {
+    window.location.href = sdk.getSigninUrl()
+  }
+</script>
+```
+
