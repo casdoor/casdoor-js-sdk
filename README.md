@@ -21,8 +21,6 @@ without having to implement it from scratch.
 
 Casdoor SDK is very simple to use. We will show you the steps below.
 
-> Noted that this sdk has been applied to casnode, if you still don’t know how to use it after reading README.md, you can refer to it
-
 ## Usage in NPM environment
 
 ### Installation
@@ -93,3 +91,54 @@ Initialization parameters are consistent with the previous node.js section:
 </script>
 ```
 
+## API reference interface
+
+#### Get sign up url
+
+```typescript
+getSignupUrl(enablePassword)
+```
+
+Return the casdoor url that navigates to the registration screen
+
+#### Get sign in url
+
+```typescript
+getSigninUrl()
+```
+
+Return the casdoor url that navigates to the login screen
+
+#### Get user profile page url
+
+```typescript
+getUserProfileUrl(userName, account)
+```
+
+Return the url to navigate to a specific user's casdoor personal page
+
+#### Get my profile page url
+
+```typescript
+getMyProfileUrl(account)
+```
+
+#### Sign in
+
+```typescript
+signin(serverUrl)
+```
+
+Handle the callback url from casdoor, call the back-end api to complete the login process
+
+## More examples
+
+To see how to use casdoor frontend SDK with casdoor backend SDK, you can refer to examples below:
+
+[casnode](https://github.com/casbin/casnode): casdoor-js-sdk + casdoor-go-sdk
+
+[casdoor-python-vue-sdk-example](https://github.com/casdoor/casdoor-python-vue-sdk-example): casdoor-vue-sdk + casdoor-python-sdk
+
+
+
+A more detailed description can be moved to:[casdoor-sdk](https://casdoor.org/docs/how-to-connect/sdk)
