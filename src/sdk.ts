@@ -49,6 +49,7 @@ class Sdk {
 
     public getSignupUrl(enablePassword: boolean = true): string {
         if (enablePassword) {
+            sessionStorage.setItem("signinUrl", this.getSigninUrl());
             return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
         } else {
             return this.getSigninUrl().replace("/login/oauth/authorize", "/signup/oauth/authorize");
