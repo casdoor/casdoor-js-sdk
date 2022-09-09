@@ -56,10 +56,25 @@ class Sdk {
         }
     }
 
+    getOrSaveState(): string {
+        const state = sessionStorage.getItem("casdoor-state");
+        if (state !== null) {
+            return state;
+        } else {
+            const state = Math.random().toString(36).slice(2);
+            sessionStorage.setItem("casdoor-state", state);
+            return state;
+        }
+    }
+
+    clearState() {
+        sessionStorage.removeItem("casdoor-state");
+    }
+
     public getSigninUrl(): string {
         const redirectUri = `${window.location.origin}${this.config.redirectPath}`;
         const scope = "read";
-        const state = this.config.appName;
+        const state = this.getOrSaveState();
         return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
     }
 
@@ -81,7 +96,23 @@ class Sdk {
 
     public signin(serverUrl: string): Promise<Response> {
         const params = new URLSearchParams(window.location.search);
-        return fetch(`${serverUrl}/api/signin?code=${params.get("code")}&state=${params.get("state")}`, {
+        const code = params.get("code");
+        const state = params.get("state");
+        const expectedState = this.getOrSaveState();
+        this.clearState();
+        if (state !== expectedState) {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve({
+                        // @ts-ignore
+                        status: "error",
+                        msg: `invalid state parameter, expected: ${expectedState}, got: ${state}`,
+                    });
+                }, 10);
+            });
+        }
+
+        return fetch(`${serverUrl}/api/signin?code=${code}&state=${state}`, {
             method: "POST",
             credentials: "include",
         }).then(res => res.json());
