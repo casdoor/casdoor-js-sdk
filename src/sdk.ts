@@ -87,16 +87,16 @@ class Sdk {
     }
 
     public getMyProfileUrl(account: Account, returnUrl: String = ""): string {
-        let param = "";
+        let params = "";
         if (account !== undefined && account !== null) {
-            param = `?access_token=${account.accessToken}`;
+            params = `?access_token=${account.accessToken}`;
             if (returnUrl !== "") {
-                param += `&returnUrl=${returnUrl}`;
+                params += `&return_url=${returnUrl}`;
             }
         } else if (returnUrl !== "") {
-            param = `?returnUrl=${returnUrl}`;
+            params = `?return_url=${returnUrl}`;
         }
-        return `${this.config.serverUrl.trim()}/account${param}`;
+        return `${this.config.serverUrl.trim()}/account${params}`;
     }
 
     public signin(serverUrl: string): Promise<Response> {
