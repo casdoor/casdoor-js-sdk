@@ -86,10 +86,15 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/users/${this.config.organizationName}/${userName}${param}`;
     }
 
-    public getMyProfileUrl(account: Account): string {
+    public getMyProfileUrl(account: Account, returnUrl: String = ""): string {
         let param = "";
         if (account !== undefined && account !== null) {
             param = `?access_token=${account.accessToken}`;
+            if (returnUrl !== "") {
+                param += `&returnUrl=${returnUrl}`;
+            }
+        } else if (returnUrl !== "") {
+            param = `?returnUrl=${returnUrl}`;
         }
         return `${this.config.serverUrl.trim()}/account${param}`;
     }
