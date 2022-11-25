@@ -91,10 +91,10 @@ class Sdk {
         if (account !== undefined && account !== null) {
             params = `?access_token=${account.accessToken}`;
             if (returnUrl !== "") {
-                params += `&return_url=${returnUrl}`;
+                params += `&returnUrl=${returnUrl}`;
             }
         } else if (returnUrl !== "") {
-            params = `?return_url=${returnUrl}`;
+            params = `?returnUrl=${returnUrl}`;
         }
         return `${this.config.serverUrl.trim()}/account${params}`;
     }
