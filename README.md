@@ -44,6 +44,7 @@ Initialization requires 5 parameters, which are all string type:
 | appName           | Yes  | the name of your Casdoor application |
 | organizationName     | Yes  | the name of the Casdoor organization connected with your Casdoor application                    |
 | redirectPath     | No  | the path of the redirect URL for your Casdoor application, will be `/callback` if not provided              |
+| signinPath     | No  | the path of the signin URL for your Casdoor application, will be `/api/signin` if not provided              |
 
 ```typescript
 import {SDK, SdkConfig} from 'casdoor-js-sdk'
@@ -54,6 +55,7 @@ const sdkConfig: SdkConfig = {
     appName: "app-casnode",
     organizationName: "casbin",
     redirectPath: "/callback",
+    signinPath: "/api/signin",
 }
 const sdk = new SDK(sdkConfig)
 // call sdk to handle
@@ -76,6 +78,7 @@ Initialization parameters are consistent with the previous node.js section:
     appName: "app-casnode",
     organizationName: "casbin",
     redirectPath: "/callback",
+    signinPath: "/api/signin",
   }
   window.sdk = new SDK(sdkConfig)
 </script>
@@ -126,7 +129,7 @@ getMyProfileUrl(account)
 #### Sign in
 
 ```typescript
-signin(serverUrl)
+signin(serverUrl, signinPath)
 ```
 
 Handle the callback url from casdoor, call the back-end api to complete the login process
