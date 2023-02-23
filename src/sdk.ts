@@ -18,6 +18,7 @@ export interface SdkConfig {
     appName: string, // the name of your Casdoor application, e.g., "app-casnode"
     organizationName: string // the name of the Casdoor organization connected with your Casdoor application, e.g., "casbin"
     redirectPath?: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
+    signinPath?: string // the path of the signin URL for your Casdoor applcation, will be "/api/signin" if not provided
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
@@ -99,7 +100,7 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/account${params}`;
     }
 
-    public signin(serverUrl: string): Promise<Response> {
+    public signin(serverUrl: string, signinPath?: string): Promise<Response> {
         const params = new URLSearchParams(window.location.search);
         const code = params.get("code");
         const state = params.get("state");
@@ -117,7 +118,7 @@ class Sdk {
             });
         }
 
-        return fetch(`${serverUrl}/api/signin?code=${code}&state=${state}`, {
+        return fetch(`${serverUrl}${signinPath || this.config.signinPath || '/api/signin'}?code=${code}&state=${state}`, {
             method: "POST",
             credentials: "include",
         }).then(res => res.json());
