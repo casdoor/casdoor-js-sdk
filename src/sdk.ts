@@ -123,6 +123,39 @@ class Sdk {
             credentials: "include",
         }).then(res => res.json());
     }
+
+    public isSilentSigninRequired(): boolean{
+        const params = new URLSearchParams(window.location.search);
+        return params.get("silentSignin") === "1";
+    }
+
+    public silentSignin(isLoggedIn: boolean, onSuccess: (message: any) => void, onFailure: (message: any) => void) {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = `${this.getSigninUrl()}&silentSignin=1`;
+      
+        const handleMessage = (event: MessageEvent) => {
+            if (window !== window.parent) {
+                return null;
+            }
+
+            if (isLoggedIn){
+                return null;
+            }
+          
+            const message = event.data;
+            if (message.tag !== "Casdoor" || message.type !== "SilentSignin") {
+                return;
+            }
+            if (message.data === 'success') {
+                onSuccess(message);
+            } else {
+                onFailure(message);
+            }
+        };
+        window.addEventListener('message', handleMessage);
+        document.body.appendChild(iframe);
+    }
 }
 
 export default Sdk;
