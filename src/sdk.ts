@@ -124,22 +124,18 @@ class Sdk {
         }).then(res => res.json());
     }
 
-    public isSilentSigninRequired(): boolean{
+    public isSilentSigninRequested(): boolean{
         const params = new URLSearchParams(window.location.search);
         return params.get("silentSignin") === "1";
     }
 
-    public silentSignin(isLoggedIn: boolean, onSuccess: (message: any) => void, onFailure: (message: any) => void) {
+    public silentSignin(onSuccess: (message: any) => void, onFailure: (message: any) => void) {
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = `${this.getSigninUrl()}&silentSignin=1`;
       
         const handleMessage = (event: MessageEvent) => {
             if (window !== window.parent) {
-                return null;
-            }
-
-            if (isLoggedIn){
                 return null;
             }
           
