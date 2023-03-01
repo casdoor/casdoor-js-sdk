@@ -134,6 +134,21 @@ signin(serverUrl, signinPath)
 
 Handle the callback url from casdoor, call the back-end api to complete the login process
 
+#### Judge whether the silent login is successful
+
+```typescript
+isSilentSigninRequired()
+```
+
+#### silentSignin
+
+
+````typescript
+silentSignin(isLoggedIn, onSuccess, onFailure)
+````
+
+if isLoggedIn == false, It will log in silently. If the silent login succeeds,the onSuccess will be executed,else the onFailure will be executed.
+
 ## More examples
 
 To see how to use casdoor frontend SDK with casdoor backend SDK, you can refer to examples below:
