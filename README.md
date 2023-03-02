@@ -134,20 +134,22 @@ signin(serverUrl, signinPath)
 
 Handle the callback url from casdoor, call the back-end api to complete the login process
 
-#### Judge whether the silent login is successful
+#### Determine whether silent sign-in is being used
 
 ```typescript
-isSilentSigninRequired()
+isSilentSigninRequested()
 ```
+
+We usually use this method to determine if silent login is being used. By default, if the silentSignin parameter is included in the URL and equals one, this method will return true. Of course, you can also use any method you prefer.
 
 #### silentSignin
 
 
 ````typescript
-silentSignin(isLoggedIn, onSuccess, onFailure)
+silentSignin(onSuccess, onFailure)
 ````
 
-if isLoggedIn == false, It will log in silently. If the silent login succeeds,the onSuccess will be executed,else the onFailure will be executed.
+First, let's explain the two parameters of this method, which are the callback methods for successful and failed login. Next, I will describe the execution process of this method. We will create a hidden "iframe" element to redirect to the login page for authentication, thereby achieving the effect of silent sign-in.
 
 ## More examples
 
