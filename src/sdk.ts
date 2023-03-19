@@ -100,10 +100,12 @@ class Sdk {
         return `${this.config.serverUrl.trim()}/account${params}`;
     }
 
-    public signin(serverUrl: string, signinPath?: string): Promise<Response> {
+    public async signin(serverUrl: string, signinPath?: string, code?: string, state?: string): Promise<Response> {
+        if(!code || !state) {
         const params = new URLSearchParams(window.location.search);
-        const code = params.get("code");
-        const state = params.get("state");
+            code = params.get("code")!;
+            state = params.get("state")!;
+        }
         const expectedState = this.getOrSaveState();
         this.clearState();
         if (state !== expectedState) {
@@ -151,6 +153,31 @@ class Sdk {
         };
         window.addEventListener('message', handleMessage);
         document.body.appendChild(iframe);
+    }
+
+    public async popupSignin(serverUrl: string, signinPath?: string) {
+        const width = 500;
+        const height = 600;
+        const left = window.screen.width / 2 - width / 2;
+        const top = window.screen.height / 2 - height / 2;
+        const popupWindow = window.open(this.getSigninUrl() + '&popup=1', "login", `width=${width},height=${height},top=${top},left=${left}`);
+
+        const handleMessage = (event: MessageEvent) => {
+            if (event.origin !== this.config.serverUrl) {
+                return;
+            }
+
+            if (event.data.type === 'loginSuccess') {
+                popupWindow!.close();
+                this.signin(serverUrl, '', event.data.data.code, event.data.data.state)
+                    .then((res: any) => {
+                        localStorage.setItem('token', res.token);
+                        window.location.reload();
+                    });
+            }
+        };
+
+        window.addEventListener('message', handleMessage);
     }
 }
 
