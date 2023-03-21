@@ -151,6 +151,14 @@ silentSignin(onSuccess, onFailure)
 
 First, let's explain the two parameters of this method, which are the callback methods for successful and failed login. Next, I will describe the execution process of this method. We will create a hidden "iframe" element to redirect to the login page for authentication, thereby achieving the effect of silent sign-in.
 
+#### popupSignin
+
+
+````typescript
+popupSignin(serverUrl, signinPath)
+````
+Popup a window to handle the callback url from casdoor, call the back-end api to complete the login process and store the token in localstorage, then reload the main window. See Demo: [casdoor-nodejs-react-example](https://github.com/casdoor/casdoor-nodejs-react-example).
+
 ## More examples
 
 To see how to use casdoor frontend SDK with casdoor backend SDK, you can refer to examples below:
