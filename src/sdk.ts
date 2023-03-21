@@ -155,29 +155,33 @@ class Sdk {
         document.body.appendChild(iframe);
     }
 
-    public async popupSignin(serverUrl: string, signinPath?: string) {
+    public async popupSignin(serverUrl: string, signinPath?: string, callback?: (info: any) => any,) {
         const width = 500;
         const height = 600;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
-        const popupWindow = window.open(this.getSigninUrl() + '&popup=1', "login", `width=${width},height=${height},top=${top},left=${left}`);
+        const popupWindow = window.open(this.getSigninUrl() + "&popup=1", "login", `width=${width},height=${height},top=${top},left=${left}`);
 
         const handleMessage = (event: MessageEvent) => {
             if (event.origin !== this.config.serverUrl) {
                 return;
             }
 
-            if (event.data.type === 'loginSuccess') {
+            if (event.data.type === "windowClosed" && callback) {
+                callback("login failed");
+            }
+
+            if (event.data.type === "loginSuccess") {
+                this.signin(serverUrl, signinPath, event.data.data.code, event.data.data.state)
+                .then((res: any) => {
+                    localStorage.setItem("token", res.token);
+                    window.location.reload();
+                });
                 popupWindow!.close();
-                this.signin(serverUrl, '', event.data.data.code, event.data.data.state)
-                    .then((res: any) => {
-                        localStorage.setItem('token', res.token);
-                        window.location.reload();
-                    });
             }
         };
 
-        window.addEventListener('message', handleMessage);
+        window.addEventListener("message", handleMessage);
     }
 }
 
