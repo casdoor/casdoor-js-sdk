@@ -174,7 +174,7 @@ class Sdk {
             if (event.data.type === "loginSuccess") {
                 this.signin(serverUrl, signinPath, event.data.data.code, event.data.data.state)
                 .then((res: any) => {
-                    localStorage.setItem("token", res.token);
+                    sessionStorage.setItem("token", res.token);
                     window.location.reload();
                 });
                 popupWindow!.close();
