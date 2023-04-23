@@ -1,4 +1,5 @@
 import Sdk from '../src';
+
 const sdkConfig = {
   serverUrl: 'https://door.casbin.com',
   clientId: '014ae4bd048734ca2dea',
@@ -6,6 +7,7 @@ const sdkConfig = {
   organizationName: 'casbin',
   redirectPath: '/callback',
 };
+
 describe('sdk constructor', () => {
   it('with full configs', () => {
     const sdk = new Sdk(sdkConfig);
