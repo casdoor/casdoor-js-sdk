@@ -21,7 +21,7 @@
     "maxConcurrency": 1,
     "maxWorkers": 1,
     "testTimeout": 30000,
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "transform": {
       "^.+\\.(t|j)sx?$": "ts-jest"
     },
