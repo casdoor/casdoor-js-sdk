@@ -14,6 +14,7 @@
 
 import PKCE from 'js-pkce';
 import ITokenResponse from "js-pkce/dist/ITokenResponse";
+import IObject from "js-pkce/dist/IObject";
 
 export interface SdkConfig {
     serverUrl: string, // your Casdoor server URL, e.g., "https://door.casbin.com" for the official demo site
@@ -23,6 +24,7 @@ export interface SdkConfig {
     redirectPath?: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
     signinPath?: string // the path of the signin URL for your Casdoor applcation, will be "/api/signin" if not provided
     scope?: string // apply for permission to obtain the user information, will be "profile" if not provided
+    storage?: Storage // the storage to store the state, will be sessionStorage if not provided
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
@@ -62,6 +64,7 @@ class Sdk {
             authorization_endpoint: `${this.config.serverUrl.trim()}/login/oauth/authorize`,
             token_endpoint: `${this.config.serverUrl.trim()}/api/login/oauth/access_token`,
             requested_scopes: this.config.scope || "profile",
+            storage: this.config.storage,
         });
     }
 
@@ -200,12 +203,12 @@ class Sdk {
         window.addEventListener("message", handleMessage);
     }
 
-    public async signin_redirect(): Promise<void> {
-        window.location.href = this.pkce.authorizeUrl();
+    public async signin_redirect(additionalParams?: IObject): Promise<void> {
+        window.location.replace(this.pkce.authorizeUrl(additionalParams));
     }
 
-    public async exchangeForAccessToken(): Promise<ITokenResponse> {
-        return this.pkce.exchangeForAccessToken(window.location.href)
+    public async exchangeForAccessToken(additionalParams?: IObject): Promise<ITokenResponse> {
+        return this.pkce.exchangeForAccessToken(window.location.href, additionalParams);
     }
 
     public async getUserInfo(accessToken: string): Promise<Response> {
