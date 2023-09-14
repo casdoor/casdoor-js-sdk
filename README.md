@@ -159,6 +159,72 @@ popupSignin(serverUrl, signinPath)
 ````
 Popup a window to handle the callback url from casdoor, call the back-end api to complete the login process and store the token in localstorage, then reload the main window. See Demo: [casdoor-nodejs-react-example](https://github.com/casdoor/casdoor-nodejs-react-example).
 
+### OAuth2 PKCE flow sdk (for SPA without backend)
+
+#### Start the authorization process
+
+Typically, you just need to go to the authorization url to start the process. This example is something that might work in an SPA.
+
+```typescript
+signin_redirect();
+```
+
+You may add additional query parameters to the authorize url by using an optional second parameter:
+
+```typescript
+const additionalParams = {test_param: 'testing'};
+signin_redirect(additionalParams);
+```
+
+#### Trade the code for a token
+
+When you get back here, you need to exchange the code for a token.
+
+```typescript
+sdk.exchangeForAccessToken().then((resp) => {
+    const token = resp.access_token;
+    // Do stuff with the access token.
+});
+```
+
+As with the authorizeUrl method, an optional second parameter may be passed to the exchangeForAccessToken method to send additional parameters to the request:
+
+```typescript
+const additionalParams = {test_param: 'testing'};
+
+sdk.exchangeForAccessToken(additionalParams).then((resp) => {
+    const token = resp.access_token;
+    // Do stuff with the access token.
+});
+```
+
+#### Get user info
+
+Once you have an access token, you can use it to get user info.
+
+```typescript
+getUserInfo(accessToken).then((resp) => {
+    const userInfo = resp;
+    // Do stuff with the user info.
+});
+```
+
+#### A note on Storage
+By default, this package will use sessionStorage to persist the pkce_state. On (mostly) mobile devices there's a higher chance users are returning in a different browser tab. E.g. they kick off in a WebView & get redirected to a new tab. The sessionStorage will be empty there.
+
+In this case it you can opt in to use localStorage instead of sessionStorage:
+
+```typescript
+import {SDK, SdkConfig} from 'casdoor-js-sdk'
+
+const sdkConfig = {
+  // ...
+  storage: localStorage, // any Storage object, sessionStorage (default) or localStorage
+}
+
+const sdk = new SDK(sdkConfig)
+```
+
 ## More examples
 
 To see how to use casdoor frontend SDK with casdoor backend SDK, you can refer to examples below:

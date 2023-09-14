@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import PKCE from 'js-pkce';
+import ITokenResponse from "js-pkce/dist/ITokenResponse";
+import IObject from "js-pkce/dist/IObject";
+
 export interface SdkConfig {
     serverUrl: string, // your Casdoor server URL, e.g., "https://door.casbin.com" for the official demo site
     clientId: string, // the Client ID of your Casdoor application, e.g., "014ae4bd048734ca2dea"
@@ -19,6 +23,8 @@ export interface SdkConfig {
     organizationName: string // the name of the Casdoor organization connected with your Casdoor application, e.g., "casbin"
     redirectPath?: string // the path of the redirect URL for your Casdoor application, will be "/callback" if not provided
     signinPath?: string // the path of the signin URL for your Casdoor applcation, will be "/api/signin" if not provided
+    scope?: string // apply for permission to obtain the user information, will be "profile" if not provided
+    storage?: Storage // the storage to store the state, will be sessionStorage if not provided
 }
 
 // reference: https://github.com/casdoor/casdoor-go-sdk/blob/90fcd5646ec63d733472c5e7ce526f3447f99f1f/auth/jwt.go#L19-L32
@@ -40,21 +46,26 @@ export interface Account {
 
 class Sdk {
     private config: SdkConfig
+    private pkce : PKCE
 
     constructor(config: SdkConfig) {
         this.config = config
         if (config.redirectPath === undefined || config.redirectPath === null) {
             this.config.redirectPath = "/callback";
         }
-    }
 
-    public getSignupUrl(enablePassword: boolean = true): string {
-        if (enablePassword) {
-            sessionStorage.setItem("signinUrl", this.getSigninUrl());
-            return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
-        } else {
-            return this.getSigninUrl().replace("/login/oauth/authorize", "/signup/oauth/authorize");
+        if(config.scope === undefined || config.scope === null) {
+            this.config.scope = "profile";
         }
+
+        this.pkce = new PKCE({
+            client_id: this.config.clientId,
+            redirect_uri: `${window.location.origin}${this.config.redirectPath}`,
+            authorization_endpoint: `${this.config.serverUrl.trim()}/login/oauth/authorize`,
+            token_endpoint: `${this.config.serverUrl.trim()}/api/login/oauth/access_token`,
+            requested_scopes: this.config.scope || "profile",
+            storage: this.config.storage,
+        });
     }
 
     getOrSaveState(): string {
@@ -72,11 +83,19 @@ class Sdk {
         sessionStorage.removeItem("casdoor-state");
     }
 
+    public getSignupUrl(enablePassword: boolean = true): string {
+        if (enablePassword) {
+            sessionStorage.setItem("signinUrl", this.getSigninUrl());
+            return `${this.config.serverUrl.trim()}/signup/${this.config.appName}`;
+        } else {
+            return this.getSigninUrl().replace("/login/oauth/authorize", "/signup/oauth/authorize");
+        }
+    }
+
     public getSigninUrl(): string {
         const redirectUri = this.config.redirectPath && this.config.redirectPath.includes('://') ? this.config.redirectPath : `${window.location.origin}${this.config.redirectPath}`;
-        const scope = "read";
         const state = this.getOrSaveState();
-        return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scope}&state=${state}`;
+        return `${this.config.serverUrl.trim()}/login/oauth/authorize?client_id=${this.config.clientId}&response_type=code&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${this.config.scope}&state=${state}`;
     }
 
     public getUserProfileUrl(userName: string, account: Account): string {
@@ -135,12 +154,12 @@ class Sdk {
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
         iframe.src = `${this.getSigninUrl()}&silentSignin=1`;
-      
+
         const handleMessage = (event: MessageEvent) => {
             if (window !== window.parent) {
                 return null;
             }
-          
+
             const message = event.data;
             if (message.tag !== "Casdoor" || message.type !== "SilentSignin") {
                 return;
@@ -182,6 +201,25 @@ class Sdk {
         };
 
         window.addEventListener("message", handleMessage);
+    }
+
+    public async signin_redirect(additionalParams?: IObject): Promise<void> {
+        window.location.replace(this.pkce.authorizeUrl(additionalParams));
+    }
+
+    public async exchangeForAccessToken(additionalParams?: IObject): Promise<ITokenResponse> {
+        return this.pkce.exchangeForAccessToken(window.location.href, additionalParams);
+    }
+
+    public async getUserInfo(accessToken: string): Promise<Response> {
+        return fetch(`${this.config.serverUrl.trim()}/api/userinfo`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json"
+                },
+            }).then(res => res.json()
+        );
     }
 }
 
