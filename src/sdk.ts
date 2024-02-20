@@ -46,7 +46,7 @@ export interface Account {
 
 class Sdk {
     private config: SdkConfig
-    private pkce : PKCE
+    private pkce: PKCE
 
     constructor(config: SdkConfig) {
         this.config = config
@@ -54,7 +54,7 @@ class Sdk {
             this.config.redirectPath = "/callback";
         }
 
-        if(config.scope === undefined || config.scope === null) {
+        if (config.scope === undefined || config.scope === null) {
             this.config.scope = "profile";
         }
 
@@ -120,8 +120,8 @@ class Sdk {
     }
 
     public async signin(serverUrl: string, signinPath?: string, code?: string, state?: string): Promise<Response> {
-        if(!code || !state) {
-        const params = new URLSearchParams(window.location.search);
+        if (!code || !state) {
+            const params = new URLSearchParams(window.location.search);
             code = params.get("code")!;
             state = params.get("state")!;
         }
@@ -145,7 +145,7 @@ class Sdk {
         }).then(res => res.json());
     }
 
-    public isSilentSigninRequested(): boolean{
+    public isSilentSigninRequested(): boolean {
         const params = new URLSearchParams(window.location.search);
         return params.get("silentSignin") === "1";
     }
@@ -192,10 +192,10 @@ class Sdk {
 
             if (event.data.type === "loginSuccess") {
                 this.signin(serverUrl, signinPath, event.data.data.code, event.data.data.state)
-                .then((res: any) => {
-                    sessionStorage.setItem("token", res.token);
-                    window.location.reload();
-                });
+                    .then((res: any) => {
+                        sessionStorage.setItem("token", res.token);
+                        window.location.reload();
+                    });
                 popupWindow!.close();
             }
         };
@@ -213,12 +213,12 @@ class Sdk {
 
     public async getUserInfo(accessToken: string): Promise<Response> {
         return fetch(`${this.config.serverUrl.trim()}/api/userinfo`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Content-Type": "application/json"
-                },
-            }).then(res => res.json()
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+        }).then(res => res.json()
         );
     }
 }
