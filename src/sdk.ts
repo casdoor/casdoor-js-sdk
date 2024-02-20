@@ -15,6 +15,7 @@
 import PKCE from 'js-pkce';
 import ITokenResponse from "js-pkce/dist/ITokenResponse";
 import IObject from "js-pkce/dist/IObject";
+import {jwtDecode, JwtHeader} from "jwt-decode";
 
 export interface SdkConfig {
     serverUrl: string, // your Casdoor server URL, e.g., "https://door.casbin.com" for the official demo site
@@ -42,6 +43,115 @@ export interface Account {
     score: number,
     isAdmin: boolean,
     accessToken: string
+}
+
+export interface JwtPayload {
+    owner: string;
+    name: string;
+    createdTime: string;
+    updatedTime: string;
+    deletedTime: string;
+    id: string;
+    type: string;
+    password: string;
+    passwordSalt: string;
+    passwordType: string;
+    displayName: string;
+    firstName: string;
+    lastName: string;
+    avatar: string;
+    avatarType: string;
+    permanentAvatar: string;
+    email: string;
+    emailVerified: boolean;
+    phone: string;
+    countryCode: string;
+    region: string;
+    location: string;
+    address: string[];
+    affiliation: string;
+    title: string;
+    idCardType: string;
+    idCard: string;
+    homepage: string;
+    bio: string;
+    language: string;
+    gender: string;
+    birthday: string;
+    education: string;
+    score: number;
+    karma: number;
+    ranking: number;
+    isDefaultAvatar: boolean;
+    isOnline: boolean;
+    isAdmin: boolean;
+    isForbidden: boolean;
+    isDeleted: boolean;
+    signupApplication: string;
+    hash: string;
+    preHash: string;
+    accessKey: string;
+    accessSecret: string;
+    github: string;
+    google: string;
+    qq: string;
+    wechat: string;
+    facebook: string;
+    dingtalk: string;
+    weibo: string;
+    gitee: string;
+    linkedin: string;
+    wecom: string;
+    lark: string;
+    gitlab: string;
+    createdIp: string;
+    lastSigninTime: string;
+    lastSigninIp: string;
+    preferredMfaType: string;
+    recoveryCodes: null | string[];
+    totpSecret: string;
+    mfaPhoneEnabled: boolean;
+    mfaEmailEnabled: boolean;
+    ldap: string;
+    properties: Record<string, unknown>;
+    roles: string[];
+    permissions: Permission[];
+    groups: string[];
+    lastSigninWrongTime: string;
+    signinWrongTimes: number;
+    tokenType: string;
+    tag: string;
+    scope: string;
+    iss: string;
+    sub: string;
+    aud: string[];
+    exp: number;
+    nbf: number;
+    iat: number;
+    jti: string;
+}
+
+export interface Permission {
+    owner: string;
+    name: string;
+    createdTime: string;
+    displayName: string;
+    description: string;
+    users: string[] | null;
+    groups: string[];
+    roles: string[];
+    domains: string[];
+    model: string;
+    adapter: string;
+    resourceType: string;
+    resources: string[];
+    actions: string[];
+    effect: string;
+    isEnabled: boolean;
+    submitter: string;
+    approver: string;
+    approveTime: string;
+    state: string;
 }
 
 class Sdk {
@@ -220,6 +330,16 @@ class Sdk {
             },
         }).then(res => res.json()
         );
+    }
+
+    public parseAccessToken(accessToken: string): { header: JwtHeader, payload: JwtPayload } {
+        try {
+            const parsedHeader: JwtHeader = jwtDecode<JwtHeader>(accessToken, { header: true });
+            const parsedPayload: JwtPayload = jwtDecode<JwtPayload>(accessToken);
+            return { header: parsedHeader, payload: parsedPayload };
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
     }
 }
 

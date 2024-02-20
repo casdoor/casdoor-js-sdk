@@ -37,14 +37,14 @@ yarn add casdoor-js-sdk
 
 Initialization requires 5 parameters, which are all string type:
 
-| Name (in order)  | Must | Description                                         |
-| ---------------- | ---- | --------------------------------------------------- |
-| serverUrl  | Yes  | your Casdoor server URL               |
-| clientId         | Yes  | the Client ID of your Casdoor application                        |
-| appName           | Yes  | the name of your Casdoor application |
-| organizationName     | Yes  | the name of the Casdoor organization connected with your Casdoor application                    |
-| redirectPath     | No  | the path of the redirect URL for your Casdoor application, will be `/callback` if not provided              |
-| signinPath     | No  | the path of the signin URL for your Casdoor application, will be `/api/signin` if not provided              |
+| Name (in order)  | Must | Description                                                                                    |
+|------------------|------|------------------------------------------------------------------------------------------------|
+| serverUrl        | Yes  | your Casdoor server URL                                                                        |
+| clientId         | Yes  | the Client ID of your Casdoor application                                                      |
+| appName          | Yes  | the name of your Casdoor application                                                           |
+| organizationName | Yes  | the name of the Casdoor organization connected with your Casdoor application                   |
+| redirectPath     | No   | the path of the redirect URL for your Casdoor application, will be `/callback` if not provided |
+| signinPath       | No   | the path of the signin URL for your Casdoor application, will be `/api/signin` if not provided |
 
 ```typescript
 import {SDK, SdkConfig} from 'casdoor-js-sdk'
@@ -196,6 +196,17 @@ sdk.exchangeForAccessToken(additionalParams).then((resp) => {
     const token = resp.access_token;
     // Do stuff with the access token.
 });
+```
+
+#### Parse the access token
+
+Once you have an access token, you can parse it into JWT header and payload.
+
+```typescript
+const result = sdk.parseAccessToken(accessToken);
+console.log("JWT algorithm: " + result.header.alg);
+console.log("User organization: " + result.payload.owner);
+console.log("User name: " + result.payload.name);
 ```
 
 #### Get user info
