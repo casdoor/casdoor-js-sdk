@@ -10,14 +10,12 @@
 [![Discord](https://img.shields.io/discord/1022748306096537660?logo=discord&label=discord&color=5865F2)](https://discord.gg/5rPsrAzK7S)
 
 [npm-image]: https://img.shields.io/npm/v/casdoor-js-sdk.svg?style=flat-square
-
 [npm-url]: https://npmjs.com/package/casdoor-js-sdk
 
 [download-image]: https://img.shields.io/npm/dm/casdoor-js-sdk.svg?style=flat-square
-
 [download-url]: https://npmjs.com/package/casdoor-js-sdk
-This is Casdoor's SDK for js will allow you to easily connect your application to the Casdoor authentication system
-without having to implement it from scratch.
+
+This is Casdoor's SDK for js will allow you to easily connect your application to the [Casdoor authentication system](https://casdoor.org) without having to implement it from scratch.
 
 Casdoor SDK is very simple to use. We will show you the steps below.
 
