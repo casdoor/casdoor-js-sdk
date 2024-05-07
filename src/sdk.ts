@@ -45,6 +45,17 @@ export interface Account {
     accessToken: string
 }
 
+export interface Role {
+    owner: string,
+    name: string,
+    createdTime: string,
+    displayName: string,
+    description: string,
+    roles: string[],
+    domains: string[]
+    isEnabled: boolean
+}
+
 export interface JwtPayload {
     owner: string;
     name: string;
@@ -114,7 +125,7 @@ export interface JwtPayload {
     mfaEmailEnabled: boolean;
     ldap: string;
     properties: Record<string, unknown>;
-    roles: string[];
+    roles: Role[];
     permissions: Permission[];
     groups: string[];
     lastSigninWrongTime: string;
@@ -336,6 +347,7 @@ class Sdk {
         try {
             const parsedHeader: JwtHeader = jwtDecode<JwtHeader>(accessToken, { header: true });
             const parsedPayload: JwtPayload = jwtDecode<JwtPayload>(accessToken);
+            console.log(parsedPayload)
             return { header: parsedHeader, payload: parsedPayload };
         } catch (error: any) {
             throw new Error(error.message);
