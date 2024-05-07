@@ -347,7 +347,6 @@ class Sdk {
         try {
             const parsedHeader: JwtHeader = jwtDecode<JwtHeader>(accessToken, { header: true });
             const parsedPayload: JwtPayload = jwtDecode<JwtPayload>(accessToken);
-            console.log(parsedPayload)
             return { header: parsedHeader, payload: parsedPayload };
         } catch (error: any) {
             throw new Error(error.message);
