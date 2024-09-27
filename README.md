@@ -225,7 +225,7 @@ You could use a refresh token, to get a new token from the oauth server when tok
 ```typescript
 sdk.refreshAccessToken(refreshToken).then((resp) => {
     const token = resp.access_token;
-    // Do stuff with new access token.
+    // Do stuff with new access token
 });
 ```
 
