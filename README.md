@@ -220,7 +220,7 @@ getUserInfo(accessToken).then((resp) => {
 
 #### Refresh access token
 
-Given a refresh token, return a new token from the oauth server
+You could use a refresh token, to get a new token from the oauth server when token expired.
 
 ```typescript
 sdk.refreshAccessToken(refreshToken).then((resp) => {
