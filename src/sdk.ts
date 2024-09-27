@@ -352,6 +352,10 @@ class Sdk {
             throw new Error(error.message);
         }
     }
+
+    public refreshAccessToken(refreshToken: string): Promise<ITokenResponse> {
+        return this.pkce.refreshAccessToken(refreshToken);
+    }
 }
 
 export default Sdk;
