@@ -218,6 +218,17 @@ getUserInfo(accessToken).then((resp) => {
 });
 ```
 
+#### Refresh access token
+
+Given a refresh token, return a new token from the oauth server
+
+```typescript
+sdk.refreshAccessToken(refreshToken).then((resp) => {
+    const token = resp.access_token;
+    // Do stuff with new access token.
+});
+```
+
 #### A note on Storage
 By default, this package will use sessionStorage to persist the pkce_state. On (mostly) mobile devices there's a higher chance users are returning in a different browser tab. E.g. they kick off in a WebView & get redirected to a new tab. The sessionStorage will be empty there.
 
