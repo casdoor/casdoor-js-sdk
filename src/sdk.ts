@@ -325,7 +325,7 @@ class Sdk {
     }
 
     public async signin_redirect(additionalParams?: IObject): Promise<void> {
-        window.location.replace(this.pkce.authorizeUrl(additionalParams));
+        window.location.assign(this.pkce.authorizeUrl(additionalParams));
     }
 
     public async exchangeForAccessToken(additionalParams?: IObject): Promise<ITokenResponse> {
