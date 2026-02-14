@@ -165,6 +165,21 @@ export interface Permission {
     state: string;
 }
 
+function generateRandomState(): string {
+    const array = new Uint8Array(16);
+    if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(array);
+    } else if (typeof global !== 'undefined' && global.crypto && global.crypto.getRandomValues) {
+        global.crypto.getRandomValues(array);
+    } else {
+        // Fallback for test environments - this should not be used in production
+        for (let i = 0; i < array.length; i++) {
+            array[i] = Math.floor(Math.random() * 256);
+        }
+    }
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
 class Sdk {
     private config: SdkConfig
     private pkce: PKCE
@@ -194,7 +209,7 @@ class Sdk {
         if (state !== null) {
             return state;
         } else {
-            const state = Math.random().toString(36).slice(2);
+            const state = generateRandomState();
             sessionStorage.setItem("casdoor-state", state);
             return state;
         }
