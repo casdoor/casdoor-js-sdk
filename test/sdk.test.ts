@@ -86,6 +86,27 @@ describe('getSigninUrl', () => {
         const state = sessionStorage.getItem('casdoor-state');
         expect(url).toContain(`state=${state}`);
     });
+
+    it('generates unique cryptographic states', () => {
+        const sdk = new Sdk(sdkConfig);
+        
+        // Clear session storage to force new state generation
+        sessionStorage.clear();
+        const url1 = sdk.getSigninUrl();
+        const state1 = sessionStorage.getItem('casdoor-state');
+        
+        // Clear and generate another state
+        sessionStorage.clear();
+        const url2 = sdk.getSigninUrl();
+        const state2 = sessionStorage.getItem('casdoor-state');
+        
+        // States should be different
+        expect(state1).not.toEqual(state2);
+        
+        // State should be a valid hex string (32 characters for 16 bytes)
+        expect(state1).toMatch(/^[0-9a-f]{32}$/);
+        expect(state2).toMatch(/^[0-9a-f]{32}$/);
+    });
 });
 
 describe('parseAccessToken', () => {

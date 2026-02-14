@@ -194,7 +194,10 @@ class Sdk {
         if (state !== null) {
             return state;
         } else {
-            const state = Math.random().toString(36).slice(2);
+            // Generate cryptographically secure random state using Web Crypto API
+            const array = new Uint8Array(16);
+            window.crypto.getRandomValues(array);
+            const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
             sessionStorage.setItem("casdoor-state", state);
             return state;
         }
