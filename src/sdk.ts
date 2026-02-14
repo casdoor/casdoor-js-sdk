@@ -165,6 +165,12 @@ export interface Permission {
     state: string;
 }
 
+function generateCryptoRandomState(): string {
+    const array = new Uint8Array(16);
+    window.crypto.getRandomValues(array);
+    return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
 class Sdk {
     private config: SdkConfig
     private pkce: PKCE
@@ -194,10 +200,7 @@ class Sdk {
         if (state !== null) {
             return state;
         } else {
-            // Generate cryptographically secure random state using Web Crypto API
-            const array = new Uint8Array(16);
-            window.crypto.getRandomValues(array);
-            const state = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+            const state = generateCryptoRandomState();
             sessionStorage.setItem("casdoor-state", state);
             return state;
         }
