@@ -165,7 +165,7 @@ export interface Permission {
     state: string;
 }
 
-function generateCryptoRandomState(): string {
+function generateRandomState(): string {
     const array = new Uint8Array(16);
     if (typeof window !== 'undefined' && window.crypto && window.crypto.getRandomValues) {
         window.crypto.getRandomValues(array);
@@ -209,7 +209,7 @@ class Sdk {
         if (state !== null) {
             return state;
         } else {
-            const state = generateCryptoRandomState();
+            const state = generateRandomState();
             sessionStorage.setItem("casdoor-state", state);
             return state;
         }
