@@ -310,29 +310,101 @@ class Sdk {
         document.body.appendChild(iframe);
     }
 
-    public async popupSignin(serverUrl: string, signinPath?: string, callback?: (info: any) => any,) {
+    public async popupSignin(serverUrl: string, signinPath?: string, callback?: (info: any) => any, popupType: "window" | "iframe" = "window") {
         const width = 500;
         const height = 600;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
-        const popupWindow = window.open(this.getSigninUrl() + "&popup=1", "login", `width=${width},height=${height},top=${top},left=${left}`);
+        const signinUrl = `${this.getSigninUrl()}&popup=1&popup_type=${popupType}`;
+        const popupWindow = popupType === "window"
+            ? window.open(signinUrl, "login", `width=${width},height=${height},top=${top},left=${left}`)
+            : null;
+        let iframeMask: HTMLDivElement | null = null;
+
+        if (popupType === "iframe") {
+            iframeMask = document.createElement("div");
+            iframeMask.style.position = "fixed";
+            iframeMask.style.top = "0";
+            iframeMask.style.left = "0";
+            iframeMask.style.width = "100vw";
+            iframeMask.style.height = "100vh";
+            iframeMask.style.background = "rgba(0, 0, 0, 0.55)";
+            iframeMask.style.display = "flex";
+            iframeMask.style.alignItems = "center";
+            iframeMask.style.justifyContent = "center";
+            iframeMask.style.zIndex = "2147483647";
+
+            const frameWrapper = document.createElement("div");
+            frameWrapper.style.display = "flex";
+            frameWrapper.style.flexDirection = "column";
+            frameWrapper.style.alignItems = "center";
+            frameWrapper.style.gap = "16px";
+
+            const iframe = document.createElement("iframe");
+            iframe.src = signinUrl;
+            iframe.style.width = `${width}px`;
+            iframe.style.height = `${height}px`;
+            iframe.style.border = "none";
+            iframe.style.borderRadius = "8px";
+            iframe.style.background = "#fff";
+
+            const closeButton = document.createElement("button");
+            closeButton.type = "button";
+            closeButton.innerText = "×";
+            closeButton.style.width = "36px";
+            closeButton.style.height = "36px";
+            closeButton.style.borderRadius = "18px";
+            closeButton.style.border = "none";
+            closeButton.style.cursor = "pointer";
+            closeButton.style.background = "#fff";
+            closeButton.style.color = "#333";
+            closeButton.style.fontSize = "20px";
+            closeButton.style.lineHeight = "36px";
+            closeButton.style.padding = "0";
+
+            frameWrapper.appendChild(iframe);
+            frameWrapper.appendChild(closeButton);
+            iframeMask.appendChild(frameWrapper);
+            document.body.appendChild(iframeMask);
+
+            closeButton.onclick = () => {
+                cleanUp();
+                if (callback) {
+                    callback("login failed");
+                }
+            };
+        }
+
+        const cleanUp = () => {
+            window.removeEventListener("message", handleMessage);
+            if (popupWindow) {
+                popupWindow.close();
+            }
+            if (iframeMask) {
+                iframeMask.remove();
+                iframeMask = null;
+            }
+        };
 
         const handleMessage = (event: MessageEvent) => {
             if (event.origin !== this.config.serverUrl) {
                 return;
             }
 
-            if (event.data.type === "windowClosed" && callback) {
-                callback("login failed");
+            if (event.data.type === "windowClosed") {
+                if (callback) {
+                    callback("login failed");
+                }
+                cleanUp();
             }
 
             if (event.data.type === "loginSuccess") {
                 this.signin(serverUrl, signinPath, event.data.data.code, event.data.data.state)
                     .then((res: any) => {
                         sessionStorage.setItem("token", res.token);
+                        cleanUp();
                         window.location.reload();
                     });
-                popupWindow!.close();
             }
         };
 
