@@ -404,6 +404,12 @@ class Sdk {
                         sessionStorage.setItem("token", res.token);
                         cleanUp();
                         window.location.reload();
+                    })
+                    .catch((error: any) => {
+                        cleanUp();
+                        if (callback) {
+                            callback(error);
+                        }
                     });
             }
         };
