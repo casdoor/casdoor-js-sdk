@@ -44,9 +44,9 @@ Initialization requires 5 parameters, which are all string type:
 | signinPath       | No   | the path of the signin URL for your Casdoor application, will be `/api/signin` if not provided |
 
 ```typescript
-import {SDK, SdkConfig} from 'casdoor-js-sdk'
+import Sdk from 'casdoor-js-sdk'
 
-const sdkConfig: SdkConfig = {
+const sdkConfig = {
     serverUrl: "https://door.casbin.com",
     clientId: "014ae4bd048734ca2dea",
     appName: "app-casnode",
@@ -54,7 +54,7 @@ const sdkConfig: SdkConfig = {
     redirectPath: "/callback",
     signinPath: "/api/signin",
 }
-const sdk = new SDK(sdkConfig)
+const sdk = new Sdk(sdkConfig)
 // call sdk to handle
 ```
 
@@ -234,14 +234,14 @@ By default, this package will use sessionStorage to persist the pkce_state. On (
 In this case it you can opt in to use localStorage instead of sessionStorage:
 
 ```typescript
-import {SDK, SdkConfig} from 'casdoor-js-sdk'
+import Sdk from 'casdoor-js-sdk'
 
 const sdkConfig = {
   // ...
   storage: localStorage, // any Storage object, sessionStorage (default) or localStorage
 }
 
-const sdk = new SDK(sdkConfig)
+const sdk = new Sdk(sdkConfig)
 ```
 
 ## More examples
