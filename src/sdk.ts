@@ -297,9 +297,15 @@ class Sdk {
             }
 
             const message = event.data;
-            if (message.tag !== "Casdoor" || message.type !== "SilentSignin") {
+            if (message?.tag !== "Casdoor" || message.type !== "SilentSignin") {
                 return;
             }
+            // "signing-in" is a progress notice sent before the redirect, not a result
+            if (message.data === 'signing-in') {
+                return;
+            }
+            window.removeEventListener('message', handleMessage);
+            iframe.remove();
             if (message.data === 'success') {
                 onSuccess(message);
             } else {
