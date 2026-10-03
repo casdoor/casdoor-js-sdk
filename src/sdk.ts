@@ -310,12 +310,17 @@ class Sdk {
         document.body.appendChild(iframe);
     }
 
-    public async popupSignin(serverUrl: string, signinPath?: string, callback?: (info: any) => any, popupType: "window" | "iframe" = "window") {
+    public async popupSignin(serverUrl: string, signinPath?: string, callback?: (info: any) => any, popupType: "window" | "iframe" = "window", additionalParams?: IObject) {
         const width = 500;
         const height = 600;
         const left = window.screen.width / 2 - width / 2;
         const top = window.screen.height / 2 - height / 2;
-        const signinUrl = `${this.getSigninUrl()}&popup=1&popup_type=${popupType}`;
+        let signinUrl = `${this.getSigninUrl()}&popup=1&popup_type=${popupType}`;
+        if (additionalParams) {
+            for (const key of Object.keys(additionalParams)) {
+                signinUrl += `&${encodeURIComponent(key)}=${encodeURIComponent(additionalParams[key])}`;
+            }
+        }
         const popupWindow = popupType === "window"
             ? window.open(signinUrl, "login", `width=${width},height=${height},top=${top},left=${left}`)
             : null;

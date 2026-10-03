@@ -152,9 +152,15 @@ First, let's explain the two parameters of this method, which are the callback m
 
 
 ````typescript
-popupSignin(serverUrl, signinPath, callback, popupType)
+popupSignin(serverUrl, signinPath, callback, popupType, additionalParams)
 ````
 Popup a window to handle the callback url from casdoor, call the back-end api to complete the login process and store the token in sessionStorage, then reload the main window. `popupType` can be `"window"` (default) or `"iframe"`. When `popupType` is set to `"iframe"`, the SDK will automatically create and render a centered modal dialog, display the login form within a 500×600px iframe. The modal will automatically close upon successful authentication or when the user clicks the close button. See Demo: [casdoor-nodejs-react-example](https://github.com/casdoor/casdoor-nodejs-react-example).
+
+`signinPath` is the back-end api path used to exchange the code (e.g. `/api/signin`), not the authorize url. To add extra parameters to the authorize url opened in the popup, pass them in `additionalParams`, the same as `signin_redirect()`:
+
+```typescript
+popupSignin(serverUrl, "/api/signin", callback, "window", { mode: "light" });
+```
 
 ### OAuth2 PKCE flow sdk (for SPA without backend)
 
