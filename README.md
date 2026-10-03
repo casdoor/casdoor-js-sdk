@@ -14,7 +14,7 @@
 [download-image]: https://img.shields.io/npm/dm/casdoor-js-sdk.svg?style=flat-square
 [download-url]: https://npmjs.com/package/casdoor-js-sdk
 
-This is Casdoor's SDK for js will allow you to easily connect your application to the [Casdoor authentication system](https://casdoor.org) without having to implement it from scratch.
+This is Casdoor's SDK for js will allow you to easily connect your application to the [Casdoor authentication system](https://casdoor.ai) without having to implement it from scratch.
 
 Casdoor SDK is very simple to use. We will show you the steps below.
 
@@ -254,5 +254,5 @@ To see how to use casdoor frontend SDK with casdoor backend SDK, you can refer t
 
 
 
-A more detailed description can be moved to:[casdoor-sdk](https://casdoor.org/docs/how-to-connect/sdk)
+A more detailed description can be moved to:[casdoor-sdk](https://casdoor.ai/docs/how-to-connect/sdk/)
 
